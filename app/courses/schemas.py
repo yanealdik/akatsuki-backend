@@ -24,7 +24,7 @@ class CourseResponse(CourseBase):
     updated_at: Optional[datetime] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Заменено с orm_mode на from_attributes
 
 class UserCourseBase(BaseModel):
     course_id: int
@@ -47,7 +47,7 @@ class UserCourseResponse(UserCourseBase):
     course: CourseResponse
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Заменено с orm_mode на from_attributes
 
 class UserCourseBrief(BaseModel):
     id: int
@@ -58,7 +58,7 @@ class UserCourseBrief(BaseModel):
     earned_xp: int
     
     class Config:
-        orm_mode = True
+        from_attributes = True  # Заменено с orm_mode на from_attributes
 
 class UserProfile(BaseModel):
     id: int
@@ -70,4 +70,4 @@ class UserProfile(BaseModel):
     courses: List[UserCourseBrief] = []
     
     class Config:
-        orm_mode = True
+        from_attributes = True  # Заменено с orm_mode на from_attributes

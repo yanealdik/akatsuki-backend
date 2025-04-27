@@ -83,7 +83,7 @@ def delete_course(
     course_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-) -> Any:
+) -> None:
     # В реальной системе здесь должна быть проверка прав доступа
     course = db.query(Course).filter(Course.id == course_id).first()
     if not course:

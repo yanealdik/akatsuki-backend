@@ -24,10 +24,11 @@ class UserResponse(UserBase):
     id: int
     xp: int
     is_active: bool
+    is_verified: bool
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class Token(BaseModel):
     access_token: str
@@ -35,3 +36,15 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     user_id: Optional[int] = None
+
+# Новые схемы для верификации email
+class VerificationRequest(BaseModel):
+    email: EmailStr
+
+class VerificationSubmit(BaseModel):
+    email: EmailStr
+    code: str = Field(..., min_length=6, max_length=6)
+
+class VerificationResponse(BaseModel):
+    message: str
+    code: Optional[str] = None  # Для режима разработки, в продакшне убрать
