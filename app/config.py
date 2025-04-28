@@ -22,8 +22,8 @@ class Settings(BaseSettings):
     MAIL_SERVER: Optional[str] = os.getenv("MAIL_SERVER")
     MAIL_PORT: int = int(os.getenv("MAIL_PORT", "587"))
     MAIL_USERNAME: Optional[str] = os.getenv("MAIL_USERNAME")
-    MAIL_PASSWORD: Optional[str] = os.getenv("MAIL_PASSWORD")
-    MAIL_FROM: str = os.getenv("MAIL_FROM", "noreply@akatsuki.com")
+    MAIL_PASSWORD: Optional[str] = os.getenv("wpwh wxxj ujvi yltd")
+    MAIL_FROM: str = os.getenv("MAIL_FROM", "akatsukicourses@gmail.com")
     MAIL_FROM_NAME: str = os.getenv("MAIL_FROM_NAME", "Akatsuki Education")
     MAIL_TLS: bool = True
     MAIL_SSL: bool = False
