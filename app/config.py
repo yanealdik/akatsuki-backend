@@ -19,12 +19,12 @@ class Settings(BaseSettings):
     CORS_ORIGINS: List[str] = ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5173/akatsuki.github.io"]
     
     # Настройки Email
-    MAIL_SERVER: Optional[str] = os.getenv("MAIL_SERVER")
+    MAIL_SERVER: str = os.getenv("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT: int = int(os.getenv("MAIL_PORT", "587"))
-    MAIL_USERNAME: Optional[str] = os.getenv("MAIL_USERNAME")
-    MAIL_PASSWORD: Optional[str] = os.getenv("wpwh wxxj ujvi yltd")
-    MAIL_FROM: str = os.getenv("MAIL_FROM", "akatsukicourses@gmail.com")
-    MAIL_FROM_NAME: str = os.getenv("MAIL_FROM_NAME", "Akatsuki Education")
+    MAIL_USERNAME: str = "zarkynismagulov@gmail.com"  
+    MAIL_PASSWORD: Optional[str] = os.getenv("MAIL_PASSWORD", "ecxr zlzz xzbs scyz")
+    MAIL_FROM: str = os.getenv("MAIL_FROM", "zarkynismagulov@gmail.com")
+    MAIL_FROM_NAME: str = os.getenv("MAIL_FROM_NAME", "Akatsuki Courses")
     MAIL_TLS: bool = True
     MAIL_SSL: bool = False
     

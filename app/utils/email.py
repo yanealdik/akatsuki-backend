@@ -118,7 +118,6 @@ def send_email(to_email: str, subject: str, content: str) -> bool:
         logger.error(f"Failed to send email to {to_email}: {str(e)}")
         return False
 
-
 def send_verification_email(email: str, code: str) -> bool:
     """
     Отправляет email с кодом верификации.

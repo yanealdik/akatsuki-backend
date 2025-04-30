@@ -23,9 +23,9 @@ class UserLogin(BaseModel):
 class UserResponse(UserBase):
     id: int
     xp: int
-    is_active: bool
-    is_verified: bool
-    created_at: datetime
+    is_active: bool = True
+    is_verified: bool = True
+    created_at: datetime = datetime.now()
 
     class Config:
         from_attributes = True
@@ -47,4 +47,4 @@ class VerificationSubmit(BaseModel):
 
 class VerificationResponse(BaseModel):
     message: str
-    code: Optional[str] = None  # Для режима разработки, в продакшне убрать
+    code: Optional[str] = None  # Для режима разработки
