@@ -21,7 +21,7 @@ router = APIRouter(
     tags=["Уроки"],
 )
 
-@router.get("/{lesson_id}", response_model=LessonResponse)
+@router.get("/{lesson_id}", response_model=dict)
 def get_lesson(
     lesson_id: int,
     db: Session = Depends(get_db),
@@ -77,11 +77,21 @@ def get_lesson(
             "options": [{"id": opt.id, "text": opt.text} for opt in options]
         })
     
+    # Получаем информацию о модуле
+    module = db.query(Module).filter(Module.id == lesson.module_id).first()
+    
+    # Получаем информацию о курсе
+    course = None
+    if module:
+        course = db.query(Course).filter(Course.id == module.course_id).first()
+    
     # Формируем ответ с данными урока и прогрессом
     lesson_data = {
         "id": lesson.id,
         "title": lesson.title,
         "module_id": lesson.module_id,
+        "course_id": module.course_id if module else None,
+        "course_title": course.title if course else None,
         "intro": {
             "title": lesson.intro_title,
             "content": lesson.intro_content
@@ -150,17 +160,22 @@ def update_lesson_progress(
     if progress_data.section == "intro" and progress_data.completed:
         progress.intro_completed = True
         if not progress.intro_completed:  # Если раньше не было завершено
-            progress.earned_xp += 10
+            progress.earned_xp += progress_data.xp or 10
     
     if progress_data.section == "video" and progress_data.completed:
         progress.video_completed = True
         if not progress.video_completed:  # Если раньше не было завершено
-            progress.earned_xp += 15
+            progress.earned_xp += progress_data.xp or 15
     
     if progress_data.section == "practice" and progress_data.completed:
         progress.practice_completed = True
         if not progress.practice_completed:  # Если раньше не было завершено
-            progress.earned_xp += 25
+            progress.earned_xp += progress_data.xp or 25
+    
+    if progress_data.section == "test" and progress_data.completed:
+        progress.test_completed = True
+        if not progress.test_completed:  # Если раньше не было завершено
+            progress.earned_xp += progress_data.xp or 50
     
     # Проверяем, завершен ли весь урок
     if progress.intro_completed and progress.video_completed and progress.practice_completed and progress.test_completed:
