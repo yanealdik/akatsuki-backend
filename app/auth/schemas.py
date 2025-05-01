@@ -25,7 +25,7 @@ class UserResponse(UserBase):
     xp: int
     is_active: bool = True
     is_verified: bool = True
-    created_at: datetime = datetime.now()
+    created_at: datetime
 
     class Config:
         from_attributes = True
@@ -33,18 +33,7 @@ class UserResponse(UserBase):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    user: Optional[UserResponse] = None
 
 class TokenData(BaseModel):
     user_id: Optional[int] = None
-
-# Новые схемы для верификации email
-class VerificationRequest(BaseModel):
-    email: EmailStr
-
-class VerificationSubmit(BaseModel):
-    email: EmailStr
-    code: str = Field(..., min_length=6, max_length=6)
-
-class VerificationResponse(BaseModel):
-    message: str
-    code: Optional[str] = None  # Для режима разработки

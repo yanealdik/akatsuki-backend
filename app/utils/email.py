@@ -6,11 +6,9 @@ from sqlalchemy.orm import Session
 from app.auth.models import User, VerificationCode
 from app.config import settings
 
-
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +39,7 @@ def create_verification_code(db: Session, user_id: int, email: str) -> Verificat
 def verify_code(db: Session, email: str, code: str) -> Optional[User]:
     """
     Проверяет код верификации. Возвращает пользователя, если код верный.
+    Примечание: эта функция не используется, но оставлена для совместимости.
     """
     # Находим последний активный код для email
     db_code = (
@@ -67,10 +66,6 @@ def verify_code(db: Session, email: str, code: str) -> Optional[User]:
     
     # Активируем пользователя
     user = db.query(User).filter(User.id == db_code.user_id).first()
-    if user:
-        user.is_verified = True
-        user.is_active = True
-        db.add(user)
     
     db.commit()
     
@@ -78,37 +73,37 @@ def verify_code(db: Session, email: str, code: str) -> Optional[User]:
 
 def send_email(to_email: str, subject: str, content: str) -> bool:
     """
-    Generic function to send emails using the application settings.
+    Функция для отправки email, используя настройки приложения.
     
     Args:
-        to_email: Recipient email address
-        subject: Email subject
-        content: Email content (HTML)
+        to_email: Email получателя
+        subject: Тема письма
+        content: Содержимое письма (HTML)
         
     Returns:
-        bool: True if email was sent successfully, False otherwise
+        bool: True если письмо было успешно отправлено, False в противном случае
     """
     try:
-        # Create message
+        # Создаем сообщение
         message = MIMEMultipart()
         message["From"] = f"{settings.MAIL_FROM_NAME} <{settings.MAIL_FROM}>"
         message["To"] = to_email
         message["Subject"] = subject
         
-        # Attach content
+        # Добавляем содержимое
         message.attach(MIMEText(content, "html"))
         
-        # Connect to SMTP server
+        # Подключаемся к SMTP серверу
         with smtplib.SMTP(settings.MAIL_SERVER, settings.MAIL_PORT) as server:
-            # Start TLS if enabled
+            # Включаем TLS если настроено
             if settings.MAIL_TLS:
                 server.starttls()
             
-            # Login if credentials provided
+            # Авторизуемся если указаны учетные данные
             if settings.MAIL_USERNAME and settings.MAIL_PASSWORD:
                 server.login(settings.MAIL_USERNAME, settings.MAIL_PASSWORD)
             
-            # Send email
+            # Отправляем email
             server.send_message(message)
             
             logger.info(f"Email sent successfully to {to_email}")
@@ -121,6 +116,8 @@ def send_email(to_email: str, subject: str, content: str) -> bool:
 def send_verification_email(email: str, code: str) -> bool:
     """
     Отправляет email с кодом верификации.
+    Эта функция сохранена для обратной совместимости, но фактически не используется,
+    так как верификация email отключена.
     """
     subject = "Ваш код подтверждения - Akatsuki Education"
     content = f"""
@@ -139,12 +136,13 @@ def send_verification_email(email: str, code: str) -> bool:
     if settings.DEBUG:
         logger.info(f"Verification code for {email}: {code}")
     
-    return send_email(email, subject, content)
+    # В текущей реализации мы просто возвращаем True, так как верификация отключена
+    return True
 
 
 def send_welcome_email(email: str) -> bool:
     """
-    Отправляет приветственное письмо после успешной верификации.
+    Отправляет приветственное письмо после успешной регистрации.
     """
     subject = "Добро пожаловать в Akatsuki Education!"
     content = f"""
@@ -163,4 +161,5 @@ def send_welcome_email(email: str) -> bool:
     if settings.DEBUG:
         logger.info(f"Welcome email sent to {email}")
     
-    return send_email(email, subject, content)
+    # Отправка email отключена для упрощения регистрации
+    return True

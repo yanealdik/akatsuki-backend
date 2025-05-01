@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime
 import random
 import string
 
@@ -18,8 +18,8 @@ class User(Base):
     nickname = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     xp = Column(Integer, default=0)
-    is_active = Column(Boolean, default=False)  # Изменено на False по умолчанию
-    is_verified = Column(Boolean, default=False)  # Новое поле для верификации email
+    is_active = Column(Boolean, default=True)  # Изменено на True по умолчанию
+    is_verified = Column(Boolean, default=True)  # Изменено на True по умолчанию
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -30,6 +30,7 @@ class User(Base):
     @staticmethod
     def get_password_hash(password):
         return pwd_context.hash(password)
+
 
 class VerificationCode(Base):
     __tablename__ = "verification_codes"
